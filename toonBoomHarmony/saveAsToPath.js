@@ -14,6 +14,7 @@ function saveAsToPath(){
 //DONE Bugs acontecem se as pastas que tentam ser criadas já existem (?) !
 //DONE checar se a pasta da cena (!!!) já existe. se sim, perguntar se que exluí-la pra gravar uma nova
 //DONE Diálogo explicativo!
+//FIXME FIXME FIXME arrumar sistema de cópia de arquivos, está ridículo de demorado!
 //FIXME possibilidade de mudar o caminho
 //FIXME ignorar pasta 'frames'
 //FIXME para arquivos *xstage, copiar apenas versão atual!
@@ -31,7 +32,7 @@ var rootDir = new Dir;
 rootDir.path = "C:/Users/User/Desktop/cenaTeste/savePath/";
 var scenePath = scene.currentProjectPath();
 var savePath = new Dir;
-savePath.path = rootDir.path + scene.currentScene();
+savePath.path = rootDir.path + "/" + scene.currentScene();
 
 if(!rootDir.exists){
   rootDir.mkdir();
@@ -43,7 +44,7 @@ if(savePath.exists){
 
 rootDir.mkdir(savePath.path);
 loopAndCopy(scenePath);
-MessageBox.information("Foi!");
+MessageBox.information("A cena foi salva no\ncaminho especificado.");
 
 /*  - - { H E L P E R   F U N C T I O N S } - -  */
 
