@@ -15,12 +15,16 @@ function saveAsToPath(){
 //DONE checar se a pasta da cena (!!!) já existe. se sim, perguntar se que exluí-la pra gravar uma nova
 //DONE Diálogo explicativo!
 //DONE arrumar sistema de cópia de arquivos, está ridículo de demorado!
-//FIXME possibilidade de mudar o caminho
+//DONE possibilidade de mudar o caminho!
 //FIXME ignorar pasta 'frames'
 //FIXME para arquivos *xstage, copiar apenas versão atual!
 //FIXME ignorar arquivos com ~
 
 /*  - - { M A I N   F U N C T I O N } - -  */
+
+var rootDir = new Dir;
+//ALTERAR DESTINO PADRAO  NA LINHA ABAIXO!
+rootDir.path = "C:/Users/User/Desktop/cenaTeste/savePath/";
 
 if(!initDialog()){
   return;
@@ -28,8 +32,6 @@ if(!initDialog()){
 
 scene.saveAll();
 
-var rootDir = new Dir;
-rootDir.path = "C:/Users/User/Desktop/cenaTeste/savePath/";
 var scenePath = scene.currentProjectPath();
 var savePath = new Dir;
 savePath.path = rootDir.path + "/" + scene.currentScene();
@@ -103,9 +105,8 @@ function initDialog(){
   l1.text = s1;
   d.add(l1);
 
-  var sPath = "C:/Users/User/Desktop/cenaTeste/savePath/";
   var inputL = new LineEdit;
-  inputL.text = sPath;
+  inputL.text = rootDir.path;
   inputL.label = "Save as to path:";
   d.add( inputL );
 
@@ -124,11 +125,13 @@ function initDialog(){
   l4.text = s4;
   d.add(l4);
 
+  d.addSpace(10);
+
   if(d.exec()){
-	   return true;
+    rootDir.path = inputL.text;
+	  return true;
   }else{
     return false;
   }
 }
-
 }
