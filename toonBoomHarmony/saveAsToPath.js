@@ -2,7 +2,7 @@
 
 ---[ Toon Boom Harmony Premium 14.0.0 ]---
 
-[PTBR] Esse script pede confirmação do usuária para salvar a cena e copiá-la em
+[PTBR] Esse script pede confirmação do usuário para salvar a cena e copiá-la em
 um caminho pré-determinado.
 
 .gabriel camelo @ birdo, mai/2018
@@ -14,7 +14,7 @@ function saveAsToPath(){
 //DONE Bugs acontecem se as pastas que tentam ser criadas já existem (?) !
 //DONE checar se a pasta da cena (!!!) já existe. se sim, perguntar se que exluí-la pra gravar uma nova
 //DONE Diálogo explicativo!
-//FIXME FIXME FIXME arrumar sistema de cópia de arquivos, está ridículo de demorado!
+//DONE arrumar sistema de cópia de arquivos, está ridículo de demorado!
 //FIXME possibilidade de mudar o caminho
 //FIXME ignorar pasta 'frames'
 //FIXME para arquivos *xstage, copiar apenas versão atual!
@@ -72,24 +72,16 @@ function loopAndCopy(path){
       var dif = dir.path.replace(scenePath,"");
       var newFilePath = savePath.path + dif + "/" + l[item];
 
-      copyFileBytes(originalFilePath,newFilePath);
+      copyFile(originalFilePath,newFilePath);
    }
   }
 }
 
-function copyFileBytes(copyPath,pastePath){
-	var fileToCopy = new File(copyPath);
-	var copyOfFile = new File(pastePath);
+function copyFile(copyPath,pastePath){
+	var fileToCopy = new PermanentFile(copyPath);
+	var copyOfFile = new PermanentFile(pastePath);
 
-	fileToCopy.open(FileAccess.ReadOnly);
-	copyOfFile.open(FileAccess.WriteOnly);
-
-	for(var i = 0;i<fileToCopy.size;i=i+1){
-		copyOfFile.writeByte(fileToCopy.readByte());
-	}
-
-	fileToCopy.close();
-	copyOfFile.close();
+  fileToCopy.copy(copyOfFile);
 }
 
 function fileOrFolder(fileToCheck){
@@ -126,6 +118,11 @@ function initDialog(){
   var l3 = new Label();
   l3.text = s3;
   d.add(l3);
+
+  var s4 = "Isso pode levar alguns minutos. Um aviso aparecerá quando estiver terminado.";
+  var l4 = new Label();
+  l4.text = s4;
+  d.add(l4);
 
   if(d.exec()){
 	   return true;
