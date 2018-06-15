@@ -16,9 +16,9 @@ function saveAsToPath(){
 //DONE Diálogo explicativo!
 //DONE arrumar sistema de cópia de arquivos, está ridículo de demorado!
 //DONE possibilidade de mudar o caminho!
-//FIXME ignorar pasta 'frames'
-//FIXME para arquivos *xstage, copiar apenas versão atual!
-//FIXME ignorar arquivos com ~
+//DONE ignorar pasta 'frames'
+//DONE para arquivos *xstage, copiar apenas versão atual!
+//DONE ignorar arquivos com ~
 
 /*  - - { M A I N   F U N C T I O N } - -  */
 
@@ -62,6 +62,9 @@ function loopAndCopy(path){
   l.shift();
   for(item in l){
     if(fileOrFolder(dir.path + "/" + l[item]) == "FOLDER"){
+      if (l[item]=="frames"){
+        continue;
+      }
       var tempDir = new Dir;
       var dif = dir.path.replace(scenePath,"");
       tempDir.path = savePath.path + dif + "/" + l[item];
@@ -70,6 +73,13 @@ function loopAndCopy(path){
       }
       loopAndCopy(dir.path + "/" + l[item]);
    }else if(fileOrFolder(dir.path + "/" + l[item]) == "FILE"){
+      if(l[item].search("~")!=-1){
+        continue;
+      }else if(l[item].search(".xstage")!=-1){
+        if(l[item].replace(".xstage","")!=scene.currentVersionName()) {
+          continue;
+        }
+      }
       var originalFilePath = dir.path + "/" + l[item];
       var dif = dir.path.replace(scenePath,"");
       var newFilePath = savePath.path + dif + "/" + l[item];
