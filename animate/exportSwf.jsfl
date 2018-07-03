@@ -28,7 +28,7 @@ outra pasta pre definida.
 
 ##########################################################################*/
 
-﻿var sourceFolder = fl.browseForFolderURL("Selecione a pasta contendo os arquivos *fla:");
+var sourceFolder = fl.browseForFolderURL("Selecione a pasta contendo os arquivos *fla:");
 var destinationFolder = fl.browseForFolderURL("Selecione a pasta para salvar os *swf:");
 
 var files = FLfile.listFolder(sourceFolder + "/*.fla", "files");
