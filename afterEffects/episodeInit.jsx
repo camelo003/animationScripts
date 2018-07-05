@@ -19,7 +19,7 @@
 [PTBR] Script para importar todos os swfs de todas as cenas de um ep. e montar
 a timeline em cima do animatic:
 
-0. [OK] Checa se o usuario selecionou uma comp para ser a tripa
+0. [OK] Pede pro usuário selecionar uma comp para ser a 'tripa' do ep.
 1. [OK] Usuário seleciona a pasta contendo as cenas;
 2. [OK] Remove qualquer cena que não continer "sc" no nome;
 3. [OK] Importa todos os swf de cada pasta para uma bin de nome equivalente;
@@ -36,20 +36,11 @@ episodeInit();
 
 function episodeInit(){
 
-var sel = getCompByName("exemproDeTripa"); //0.
-/* temporariamente desligado. o script não lê a seleção se rodado pelo editor!
-var sel = app.project.selection;
-
-if(sel.length == 0){
-  alert("Nenhum item selecionado.");
-  //return;
-}else if(sel.length > 1){
-  alert("Mais de um item selecionado.");
-  //return;
-}else if(!(sel[0] instanceof CompItem)){
-  alert("O item selecionado não é uma comp.");
-  //return;
-} */
+//0.
+var sel = selectComp();
+if(!(sel instanceof CompItem)){
+  return;
+}
 
 app.beginUndoGroup("Import episode");
 
@@ -107,7 +98,7 @@ for(var i=2;i<=sel.layers.length;i=i+1){
 //7.
 confirmation();
 
-// - - { H E L P E R   F U N C T I O N S } - -
+// - - { H E L P E R   F U N C T I O N S } - - //
 
 function print(content){
   $.writeln(content);
@@ -119,6 +110,42 @@ function getCompByName(name){
       return app.project.item(i);
     }
   }
+}
+
+function selectComp(){
+  var selectedComp;
+
+  var compsInProj = [];
+  for(var i=1;i<=app.project.numItems;i=i+1){
+    if(app.project.items[i] instanceof CompItem){
+      compsInProj.push(app.project.items[i]);
+    }
+  }
+
+  var compsNames = [];
+  for(var i=0;i<compsInProj.length;i=i+1){
+      compsNames.push(compsInProj[i].name);
+  }
+
+  var myWind = new Window("dialog","Selecione a comp do ep.");
+
+  myWind.text1 = myWind.add("statictext",undefined,"Selecione nessa lista a comp contendo o animatic. Ela será preenchida com as cenas.");
+  myWind.list = myWind.add("dropdownlist",undefined,compsNames);
+  myWind.list.selection = 0;
+  myWind.cancelBtn = myWind.add("button",undefined,"Cancela",{name: "cancel"});
+  myWind.cancelBtn.onClick = function (){
+    myWind.close();
+  };
+  myWind.okBtn = myWind.add("button",undefined,"Já é!",{name: "ok"});
+  myWind.okBtn.onClick = function (){
+    selectedComp = compsInProj[myWind.list.selection.index];
+    alert("Okayzou! Selecionou o " + compsInProj[myWind.list.selection.index].name); //FIXME <- Remover
+    myWind.close();
+  };
+  myWind.show();
+  myWind = undefined;
+
+  return selectedComp;
 }
 
 function confirmation(){
