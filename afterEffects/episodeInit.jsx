@@ -19,14 +19,14 @@
 [PTBR] Script para importar todos os swfs de todas as cenas de um ep. e montar
 a timeline em cima do animatic:
 
-0. [OK] Pede pro usuário selecionar uma comp para ser a 'tripa' do ep.
+0. [ok] Pede pro usuário selecionar uma comp para ser a 'tripa' do ep.
 1. [OK] Usuário seleciona a pasta contendo as cenas;
 2. [OK] Remove qualquer cena que não continer "sc" no nome;
 3. [OK] Importa todos os swf de cada pasta para uma bin de nome equivalente;
 4. [OK] Faz uma precomp com o nome da cena e coloca os swf dentro, em ordem;
 5. [OK] Posiciona cada precomp em sequencia da comp do Animatic;
 6. [  ] Confere inicio de cada cena em relação à marcação do animatic;
-7. [  ] Exibe uma mensagem de confirmação.
+7. [ok] Exibe uma mensagem de confirmação.
 
 .gabriel camelo @ birdo, jun/2018
 
@@ -35,6 +35,9 @@ a timeline em cima do animatic:
 episodeInit();
 
 function episodeInit(){
+
+var swfs = 0;
+var scenes = 0;
 
 //0.
 var sel = selectComp();
@@ -84,7 +87,9 @@ for(var i=0; i<scenesFolders.length; i=i+1){
   /* NOTE o primeiro exec. do loop cria uma comp dentro de tempFolder.
   a qtd. de itens aumenta e no final do loop tenta-se colocar a propria
   comp dentro dela mesma. por isso esse if() antes de adicionar. >:C  */
+    swfs = swfs + 1;
   }
+  scenes = scenes + 1;
   //5. a)
   sel.layers.add(tempComp);
 }
@@ -92,7 +97,7 @@ for(var i=0; i<scenesFolders.length; i=i+1){
 //5. b)
 for(var i=2;i<=sel.layers.length;i=i+1){
   var prevEnd = sel.layer(i-1).startTime + sel.layer(i-1).outPoint;
-  sel.layer(i).startTime = prevEnd;
+  sel.layer(i).startTime = prevEnd; //FIXME -> tratar caso o esteja fora da comp
 }
 
 //7.
@@ -139,7 +144,6 @@ function selectComp(){
   myWind.okBtn = myWind.add("button",undefined,"Já é!",{name: "ok"});
   myWind.okBtn.onClick = function (){
     selectedComp = compsInProj[myWind.list.selection.index];
-    alert("Okayzou! Selecionou o " + compsInProj[myWind.list.selection.index].name); //FIXME <- Remover
     myWind.close();
   };
   myWind.show();
@@ -149,7 +153,27 @@ function selectComp(){
 }
 
 function confirmation(){
-  alert("Episódio foi importado! Depois devo colocar a quantidades de swfs e comps.","Sucesso!",false);
+  var confirmW = new Window("dialog","Sucesso!");
+  confirmW.mainPnl = confirmW.add('group',[25,5,355,115]);
+  var s = "Aparentemente deu tudo certo!\n\nForam importados " + swfs + " arquivos *swf e " + scenes + " cenas foram criadas.\n\nO projeto ficou assim:";
+  confirmW.mainPnl.text1 = confirmW.mainPnl.add('statictext',[0,0,340,115],s,{multiline:true});
+  confirmW.structure = confirmW.add('treeview',[25,0,355,460]);
+  fillStructure(sel,confirmW.structure);
+  confirmW.buttonsPnl = confirmW.add('group',[25,5,355,40],{orientation: "row",});
+  confirmW.buttonsPnl.okBtn = confirmW.buttonsPnl.add("button",[0,0,75,30],"Ok!",{name: "ok", align: "center"});
+  confirmW.show();
+
+  function fillStructure(compItemLocal,nodeLocal){
+    var tempNodeCatcher;
+    if(compItemLocal instanceof CompItem){
+      tempNodeCatcher = nodeLocal.add("node",compItemLocal.name);
+      for(var i=1;i<=compItemLocal.numLayers;i=i+1){
+        fillStructure(compItemLocal.layer(i).source,tempNodeCatcher);
+      }
+    }else if(compItemLocal instanceof FootageItem){
+      nodeLocal.add("item",compItemLocal.name);
+    }
+  }
 }
 
 }
