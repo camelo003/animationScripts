@@ -6,7 +6,7 @@
 |  |_|  |_____  |       |       |   |___| |_|   |  |_|  |
 |       |_____| |   _   |   _   |       |       |       |         ___
 |_______|_______|__| |__|__| |__|_______|______||_______|       /     \
- _______ _______ ______   ___ _______ _______ _______  __      |(O)_(O)|
+ _______ _______ ______   ___ _______ _______ _______  __      |(o)_(o)|
 |       |       |    _ | |   |       |       |       ||  |     /  \_/  \
 |  _____|       |   | || |   |    _  |_     _|  _____||  |   .' /     \ `.
 | |_____|       |   |_||_|   |   |_| | |   | | |_____ |  |  / /|       |\ \
@@ -21,6 +21,7 @@ a timeline em cima do animatic:
 
 0. [ok] Pede pro usuário selecionar uma comp para ser a 'tripa' do ep.
 1. [OK] Usuário seleciona a pasta contendo as cenas;
+1,5. [  ] Usuário seleciona as pastas que quer importar;
 2. [OK] Remove qualquer cena que não continer "sc" no nome;
 3. [OK] Importa todos os swf de cada pasta para uma bin de nome equivalente;
 4. [OK] Faz uma precomp com o nome da cena e coloca os swf dentro, em ordem;
@@ -51,10 +52,13 @@ app.beginUndoGroup("Import episode");
 var epFolder = Folder.selectDialog('Select the folder to be imported'); //FIXME tratar cancelamento!
 var scenesFolders = epFolder.getFiles(function isFolder(item){return item instanceof Folder;});
 
+//1,5.
+scenesFolders = filterFolders(scenesFolders);
+
 //2.
 for(var i=0; i<scenesFolders.length; i=i+1){
   //FIXME decidir o que vai no lugar de "pasta" (provavelmente "SC")
-  if(scenesFolders[i].name.indexOf("pasta")==-1){
+  if(scenesFolders[i].name.indexOf("SC")==-1){
     scenesFolders.splice(i, 1);
   }
 }
@@ -62,7 +66,7 @@ for(var i=0; i<scenesFolders.length; i=i+1){
 //3 e 4.
 for(var i=0; i<scenesFolders.length; i=i+1){
   var tempFolder = app.project.items.addFolder(scenesFolders[i].name);
-  var sceneContent = scenesFolders[i].getFiles("*png"); //FIXME '*swf' no lugar de '*png'
+  var sceneContent = scenesFolders[i].getFiles("*swf"); //FIXME '*swf' no lugar de '*png'
   for(var j=0; j<sceneContent.length; j=j+1){
     var tempImportOptions = new ImportOptions(sceneContent[j]);
     var tempItem = app.project.importFile(tempImportOptions);
@@ -77,8 +81,8 @@ for(var i=0; i<scenesFolders.length; i=i+1){
                                            ftg.width,
                                            ftg.height,
                                            ftg.pixelAspect,
-                                           ftg.frameDuration/24, //FIXME mudar pra -> ftg.frameRate
-                                           24); //FIXME mudar pra -> ftg.frameRate
+                                           ftg.duration, //FIXME mudar pra -> ftg.frameRate
+                                           ftg.frameRate); //FIXME mudar pra -> ftg.frameRate
       tempComp.parentFolder = tempFolder;
     }
     if(tempComp!=tempFolder.item(j)){
@@ -150,6 +154,50 @@ function selectComp(){
   myWind = undefined;
 
   return selectedComp;
+}
+
+function filterFolders(foldersList){
+  var w = new Window("dialog","Pastas para importar");
+  w.main = w.add("panel", [0,0,400,300],"Pastas");
+  w.main.checkboxes = w.main.add("group",[0,0,350,20+(20*(foldersList.length+1))]);
+
+  w.main.checkboxes.frstChk = w.main.checkboxes.add("checkbox", [10, 20,350, 35], "TODOS");
+  w.main.checkboxes.frstChk.onClick = function () {
+    for(var i=0;i<w.main.checkboxes.children.length;i=i+1){
+      if(i!=0){
+        w.main.checkboxes.children[i].value = w.main.checkboxes.children[0].value;
+      }
+    }
+  };
+
+  for(var i=0; i<foldersList.length; i=i+1){
+    w.main.checkboxes.add("checkbox", [10, 20*(i+2), 350, 20*(i+2)+15], foldersList[i].name);
+  }
+
+  w.main.scrl = w.main.add("scrollbar",[375,0,395,290]);
+
+  var sizeDif = (20+(20*(foldersList.length+1))) - 300;
+  w.main.scrl.onChanging = function (){w.main.checkboxes.location.y = -(w.main.scrl.value/100)*sizeDif;};
+
+  var btnWidth = 100;
+  var btnHeight = 35;
+  var btnMargin = 10;
+  w.btns = w.add("group",[0,310,400,360]);
+  w.btns.ok = w.btns.add("button",[(400/2)-btnWidth-(btnMargin/2),0,((400/2)-(btnMargin/2)),btnHeight],"Ok");
+  w.btns.ok.onClick = function (){
+    toReturn = [];
+    for(var i=0;i<foldersList.length;i=i+1){
+      if(w.main.checkboxes.children[i+1]){ // +1 porque o primeiro checkbox é o TODOS. sorry =[ ...
+        toReturn.push(foldersList[i]);
+      }
+    }
+    w.close();
+    return toReturn;
+  };
+  w.btns.cancel = w.btns.add("button",[(400/2)+(btnMargin/2),0,(400/2)+btnWidth+(btnMargin/2),btnHeight],"Cancela");
+  w.btns.cancel.onClick = function (){return false;};
+
+  w.show();
 }
 
 function confirmation(){
