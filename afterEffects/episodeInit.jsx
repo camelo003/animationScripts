@@ -99,10 +99,10 @@ for(var i=0; i<scenesFolders.length; i=i+1){
 }
 
 //5. b)
-for(var i=2;i<=sel.layers.length;i=i+1){
+/* for(var i=2;i<=sel.layers.length;i=i+1){ // FIXME -> wtf!?
   var prevEnd = sel.layer(i-1).startTime + sel.layer(i-1).outPoint;
   sel.layer(i).startTime = prevEnd; //FIXME -> tratar caso o esteja fora da comp
-}
+}*/
 
 //7.
 confirmation();
@@ -157,6 +157,7 @@ function selectComp(){
 }
 
 function filterFolders(foldersList){
+  var toReturn = [];
   var w = new Window("dialog","Pastas para importar");
   w.main = w.add("panel", [0,0,400,300],"Pastas");
   w.main.checkboxes = w.main.add("group",[0,0,350,20+(20*(foldersList.length+1))]);
@@ -185,19 +186,21 @@ function filterFolders(foldersList){
   w.btns = w.add("group",[0,310,400,360]);
   w.btns.ok = w.btns.add("button",[(400/2)-btnWidth-(btnMargin/2),0,((400/2)-(btnMargin/2)),btnHeight],"Ok");
   w.btns.ok.onClick = function (){
-    toReturn = [];
     for(var i=0;i<foldersList.length;i=i+1){
-      if(w.main.checkboxes.children[i+1]){ // +1 porque o primeiro checkbox é o TODOS. sorry =[ ...
+      if(w.main.checkboxes.children[i+1].value){ // +1 porque o primeiro checkbox é o TODOS. sorry =[ ...
         toReturn.push(foldersList[i]);
       }
     }
     w.close();
-    return toReturn;
   };
   w.btns.cancel = w.btns.add("button",[(400/2)+(btnMargin/2),0,(400/2)+btnWidth+(btnMargin/2),btnHeight],"Cancela");
-  w.btns.cancel.onClick = function (){return false;};
+  w.btns.cancel.onClick = function (){
+    toReturn = foldersList;
+    w.close();
+  };
 
   w.show();
+  return toReturn;
 }
 
 function confirmation(){
