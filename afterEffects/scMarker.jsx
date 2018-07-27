@@ -11,6 +11,7 @@
 
 ~~~~{After Effects CC 15.0.1}~~~~
 
+[PTBR]
 Expressão pra ser colocada no parâmetro 'Source Text' de uma layer de texto a fim
 de gerar uma marcação de cenas baseadas em uma layer de referência com as marcas.
 
