@@ -82,7 +82,7 @@ if(isTransition){
 if(isTransition){
   //do nothing!
 }else if(activeMark>1 && L.marker.key(activeMark-1).comment.indexOf("t")!=-1){ //anterior for transição
-  frameDuration = timeToFrames(L.marker.key(activeMark+1).time-L.marker.key(activeMark-1).time);
+  frameDuration = timeToFrames(L.marker.key(activeMark+1).time-L.marker.key(activeMark-1).time)-1;
 }else if(L.marker.key(activeMark+1).comment.indexOf("t")!=-1){ //próx. for transição
   frameDuration = timeToFrames(L.marker.key(activeMark+2).time-L.marker.key(activeMark).time)-1;
 }else{ //normalzão
@@ -96,7 +96,7 @@ if(isTransition){
   var preFrameDuration = timeToFrames(L.marker.key(activeMark+1).time-L.marker.key(activeMark-1).time)-1;
   var nextScName = scFormat(activeScene+1);
   var nextActualFrame = timeToFrames(time-L.marker.key(activeMark).time);
-  var nextFrameDuration = timeToFrames(L.marker.key(activeMark+2).time-L.marker.key(activeMark).time);
+  var nextFrameDuration = timeToFrames(L.marker.key(activeMark+2).time-L.marker.key(activeMark).time)-1;
   
   finalOutput = preScName  + "\n" + preActualFrame  + "/" + preFrameDuration + "\n\n" +
                 nextScName + "\n" + nextActualFrame + "/" + nextFrameDuration;
