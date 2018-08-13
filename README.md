@@ -12,4 +12,4 @@ Scripts de melhora de workflow de animação;
 - [JavaScript Tools Guide](https://wwwimages2.adobe.com/content/dam/acom/en/products/indesign/pdfs/JavaScriptToolsGuide_CS5.pdf);
 
 
-- [*Extra!*](https://forums.adobe.com/thread/1229123)*, solução bug de mostrat listas grandes!*
+- [*Extra*](https://forums.adobe.com/thread/1229123)*, solução bug de mostrar listas grandes!*
