@@ -38,12 +38,11 @@ function sendNotes(){
   }
 
   //Caminho onde os notes serão salvos devem ser escritos nessa variavel "pathToNotes"
-  var pathToNotes = "C:/Users/User/Desktop/cenaTeste/NOTES";
-  var date = formatedDate();
+  var pathToNotes = "C:/Users/gabriel.camelo/Desktop/testHarmonyScene/notes/" + String(scene.currentScene().split("_")[1]);
 
   selection.clearSelection();
   selection.addNodeToSelection(noteNode);
-  var templateName = copyPaste.createTemplateFromSelection(scene.currentScene()+"_notes_"+date,pathToNotes);
+  var templateName = copyPaste.createTemplateFromSelection(scene.currentScene()+"_notes"+noteNode.split("_")[2],pathToNotes);
 
   MessageBox.information("Os notes do drawing '"
                          + noteNode.replace("Top/_NOTES/","")
@@ -79,16 +78,5 @@ function sendNotes(){
     }else{
       return "CANCELED";
     }
-
   }
-
-  function formatedDate(){
-    var myDate = new Date();
-    var day = myDate.getDate();
-    var refMonths = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
-    var month = refMonths[myDate.getMonth()];
-    var year = myDate.getFullYear();
-    return day+month+year;
-  }
-
 }
