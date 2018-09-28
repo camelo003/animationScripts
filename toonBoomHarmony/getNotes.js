@@ -43,7 +43,7 @@ function getNotes(){
     var foldersList = myDir.entryList("*",1,6);
     var tplList = [];
     for(item in foldersList){
-      if(foldersList[item].search(".tpl")!=-1){
+      if(foldersList[item].search(".tpl")!=-1 && foldersList[item].search("_"+scene.currentScene().split("_")[1])+"_"!=-1){
         tplList.push(foldersList[item]);
       }
     }
