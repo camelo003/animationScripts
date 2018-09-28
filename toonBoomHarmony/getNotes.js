@@ -17,12 +17,14 @@ function getNotes(){
   }
 
   //Pasta para procurar os notes dentro.
-  var pathToNotes = "C:/Users/User/Desktop/cenaTeste/NOTES";
+  var pathToNotes = "C:/Users/User/Desktop/cenaTeste/NOTES/" + scene.currentScene().split("_")[1];
 
   var template = selectNoteTemplate();
   if(template=="CANCELED"){
     return
   }
+
+  disableNotes("Top/_NOTES");
 
   copyPaste.setPasteSpecialCreateNewColumn(true);
   copyPaste.usePasteSpecial(true);
@@ -37,13 +39,28 @@ function getNotes(){
     MessageLog.trace(content);
   }
 
+  function disableNotes(notesGroup){
+
+    var a = node.subNodes(notesGroup);
+    var b = [];
+    for(item in a){
+        if(node.type(a[item])=="READ"){
+            b.unshift(a[item]);
+        }
+    }
+
+    for(item in b){
+        node.setEnable(b[item],false);
+    }
+  }
+
   function selectNoteTemplate(){
     var myDir = new Dir();
     myDir.path = pathToNotes;
     var foldersList = myDir.entryList("*",1,6);
     var tplList = [];
     for(item in foldersList){
-      if(foldersList[item].search(".tpl")!=-1 && foldersList[item].search("_"+scene.currentScene().split("_")[1])+"_"!=-1){
+      if(foldersList[item].search(".tpl")!=-1){
         tplList.push(foldersList[item]);
       }
     }
