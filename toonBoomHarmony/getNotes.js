@@ -17,7 +17,7 @@ function getNotes(){
   }
 
   //Pasta para procurar os notes dentro.
-  var pathToNotes = "C:/Users/User/Desktop/cenaTeste/NOTES/" + scene.currentScene().split("_")[1];
+  var pathToNotes = "C:/Users/gabriel.camelo/Desktop/testHarmonyScene/notes/" + scene.currentScene().split("_")[1];
 
   var template = selectNoteTemplate();
   if(template=="CANCELED"){
@@ -59,9 +59,12 @@ function getNotes(){
     myDir.path = pathToNotes;
     var foldersList = myDir.entryList("*",1,6);
     var tplList = [];
+    var editedTplList = [];
     for(item in foldersList){
       if(foldersList[item].search(".tpl")!=-1){
         tplList.push(foldersList[item]);
+        editedTplList.push("note_" + foldersList[item].split("_")[4]);
+        print(foldersList[item]);
       }
     }
     var myDialog = new Dialog();
@@ -72,14 +75,14 @@ function getNotes(){
     l1.text = "Escolher note localizado em '" + pathToNotes + "'.";
     myDialog.add(l1);
 
-    //FIXME -> Atualmente os templates não estão sendo filtrados por cena!
     var c = new ComboBox();
     c.label = "Note cena " + scene.name + ":"
-    c.itemList = tplList;
+    c.itemList = editedTplList;
     myDialog.add(c);
 
     if(myDialog.exec()){
-      return  pathToNotes +"/"+ c.currentItem;
+      var listIndex = editedTplList.indexOf(c.currentItem);
+      return  pathToNotes +"/"+ tplList[listIndex];
     }else{
       return "CANCELED";
     }
