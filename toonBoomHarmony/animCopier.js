@@ -35,19 +35,19 @@ como props. FUNÇÃO -> animCopier()
                #######################################
                ##   1. TODOS os props devem estar   ##
                ##   conectados ao composite         ##
-               ##	 'PROPS_COMPOSITE';               ##
+               ##   'PROPS_COMPOSITE';              ##
                ##                                   ##
-               ##	 2. o composite final de TODOS    ##
-               ##	 os personagens devem se chamar   ##
-               ##	 'PERSONAGEM_COMPOSITE' onde      ##
-               ##	 PERSONAGEM recebe o nome do      ##
-               ##	 respectivo personagem;           ##
+               ##   2. o composite final de TODOS   ##
+               ##   os personagens devem se chamar  ##
+               ##   'PERSONAGEM_COMPOSITE' onde     ##
+               ##   PERSONAGEM recebe o nome do     ##
+               ##   respectivo personagem;          ##
                ##                                   ##
-               ##	 3. o node 'PROPS_COMPOSITE'      ##
-               ##	 precisa estar ligado ao node     ##
-               ##	 'PERSONAGEM_COMPOSITE' pela      ##
-               ##	 última conexão (node mais à      ##
-               ##	 esquerda);                       ##
+               ##   3. o node 'PROPS_COMPOSITE'     ##
+               ##   precisa estar ligado ao node    ##
+               ##   'PERSONAGEM_COMPOSITE' pela     ##
+               ##   última conexão (node mais à     ##
+               ##   esquerda);                      ##
                #####################################*/
 
 
