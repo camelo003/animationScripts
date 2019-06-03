@@ -56,20 +56,28 @@ function AnimCopierDialog(destinyNode,bancoAddr,funcTemplates,funcThumbsSeqs){
 // ##### C A L L   B A C K   F U N C T I O N S ##### //
 
 	this.clickHome = function(){
-		this.ui.progressBar.value = 0;
-		this.ui.progressBar.minimum = 0;
+		if(selectedTemplate != -1){
+			this.ui.progressBar.value = 0;
+			this.ui.progressBar.minimum = 0;
+		}
 	}
 
 	this.clickPlay = function(){
-		this.ui.progressBar.value = 0;
-		var i=0;
-		var timeBefore = Date.now();
-		while(i<=this.ui.progressBar.maximum*3){
-			var timeNow = Date.now();
-			if(timeNow-timeBefore>(1000/24)){
-				this.ui.progressBar.value = i % this.ui.progressBar.maximum;
-				i=i+1;
-				timeBefore = timeNow;
+		if(selectedTemplate != -1 && !playing){
+			playing = true;
+			this.ui.progressBar.value = 0;
+			var i=0;
+			var timeBefore = Date.now();
+			while(i<=this.ui.progressBar.maximum*3){
+				var timeNow = Date.now();
+				if(timeNow-timeBefore>(1000/24)){
+					this.ui.progressBar.value = i % this.ui.progressBar.maximum;
+					i=i+1;
+					timeBefore = timeNow;
+				}
+				if(i == this.ui.progressBar.maximum*3){
+					playing = false;
+				}
 			}
 		}
 	}
@@ -130,6 +138,7 @@ function AnimCopierDialog(destinyNode,bancoAddr,funcTemplates,funcThumbsSeqs){
 // ########### fim das CALL BACK FUNCTIONS ########### //
 
 	var selectedTemplate = -1;
+	var playing = false;
 
 	// FIXME caminho da interface
 	this.ui = UiLoader.load("C:/Users/gabriel.camelo/Desktop/bancosTeste/animCopierInterface.ui");
