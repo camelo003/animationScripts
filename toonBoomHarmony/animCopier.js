@@ -192,6 +192,7 @@ function animCopier(){
 	var nodePath = selection.selectedNodes()[0];
 	var nodePathDivided = nodePath.split("/");
 	var myNode = nodePathDivided[nodePathDivided.length-1];
+	myNode = myNode.split("_")[0];
 
 	var workingBanco = "";
 
@@ -220,7 +221,9 @@ function animCopier(){
 	folderList.reverse();
 	folderList.pop();
 	folderList.pop();
-	folderList.pop();
+	if(folderList[folderList.length-1]==".deleted"){
+		folderList.pop();
+	}
 	folderList.reverse();
 
 	var thumbsLists = [];
