@@ -192,7 +192,14 @@ function animCopier(){
 	var nodePath = selection.selectedNodes()[0];
 	var nodePathDivided = nodePath.split("/");
 	var myNode = nodePathDivided[nodePathDivided.length-1];
-	myNode = myNode.split("_")[0];
+	for(var i=10;i>0;i=i-1){
+		var tempIndex = "_" + i;
+		if(myNode.indexOf(tempIndex) != -1){
+			myNode = myNode.replace(tempIndex,"");
+			break;
+		}
+	}
+
 
 	var workingBanco = "";
 
