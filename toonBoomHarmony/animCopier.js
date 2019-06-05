@@ -189,9 +189,7 @@ function animCopier(){
 		}
 	}
 
-	var nodePath = selection.selectedNodes()[0];
-	var nodePathDivided = nodePath.split("/");
-	var myNode = nodePathDivided[nodePathDivided.length-1];
+	var myNode = node.getName(selection.selectedNode(0));
 	for(var i=10;i>0;i=i-1){
 		var tempIndex = "_" + i;
 		if(myNode.indexOf(tempIndex) != -1){
