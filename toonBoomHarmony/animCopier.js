@@ -11,6 +11,12 @@ animações de bancos, filtrando automaticamente baseado no grupo selecionado
 e com a vantagem de se aplicar os templates à rigs contendo elementos adicionais
 como props. FUNÇÃO -> animCopier()
 
+TO-DO list:
+
+[  ] Atualizar texto e botão 'Aplicar' para exibir o nome do grupo e frame que
+     será aplicado o template;
+[  ] Fazer uma funcao 'clean()' para quando a janela for fechada.
+
               - - - I M P O R T A N T E ! - - -
 
 	Para adaptar esse script para outros projetos basta fazer o seguinte:
@@ -58,7 +64,8 @@ function AnimCopierDialog(destinyNode,bancoAddr,funcTemplates,funcThumbsSeqs){
 	this.clickHome = function(){
 		if(selectedTemplate != -1){
 			this.ui.progressBar.value = 0;
-			this.ui.progressBar.minimum = 0;
+			this.myTimer.stop();
+			playing = false;
 		}
 	}
 
@@ -66,19 +73,8 @@ function AnimCopierDialog(destinyNode,bancoAddr,funcTemplates,funcThumbsSeqs){
 		if(selectedTemplate != -1 && !playing){
 			playing = true;
 			this.ui.progressBar.value = 0;
-			var i=0;
-			var timeBefore = Date.now();
-			while(i<=this.ui.progressBar.maximum*3){
-				var timeNow = Date.now();
-				if(timeNow-timeBefore>(1000/24)){
-					this.ui.progressBar.value = i % this.ui.progressBar.maximum;
-					i=i+1;
-					timeBefore = timeNow;
-				}
-				if(i == this.ui.progressBar.maximum*3){
-					playing = false;
-				}
-			}
+			animCounter = 0;
+			this.myTimer.start();
 		}
 	}
 
@@ -133,12 +129,21 @@ function AnimCopierDialog(destinyNode,bancoAddr,funcTemplates,funcThumbsSeqs){
 
 		this.ui.progressBar.value = 0;
 		this.ui.progressBar.maximum = funcThumbsSeqs[selectedTemplate].length - 1;
+
+		this.myTimer.stop();
+		playing = false;
+	}
+
+	this.newFrame = function(){
+		this.ui.progressBar.value = animCounter % this.ui.progressBar.maximum;
+		animCounter = animCounter + 1;
 	}
 
 // ########### fim das CALL BACK FUNCTIONS ########### //
 
 	var selectedTemplate = -1;
 	var playing = false;
+	var animCounter = 0;
 
 	// FIXME caminho da interface
 	this.ui = UiLoader.load("C:/Users/gabriel.camelo/Desktop/bancosTeste/animCopierInterface.ui");
@@ -147,9 +152,12 @@ function AnimCopierDialog(destinyNode,bancoAddr,funcTemplates,funcThumbsSeqs){
 	templatesList.setStringList(funcTemplates);
 	this.ui.listView.setModel(templatesList);
 
-	//this.ui.label.pixmap = pix;
 	this.ui.label.text = "Selecione um template ao lado";
 
+	this.myTimer = new QTimer();
+	this.myTimer.interval = 1000/24;
+
+	this.myTimer.timeout.connect(this,this.newFrame);
 	this.ui.btHome.clicked.connect(this,this.clickHome);
 	this.ui.btPlay.clicked.connect(this,this.clickPlay);
 	this.ui.listView.clicked.connect(this,this.changeList);
